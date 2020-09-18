@@ -1,0 +1,71 @@
+plugins {
+    id 'java-library'
+    id 'war'
+    id 'eclipse-wtp'
+    id "com.bmuschko.cargo" version "2.7.1"
+}
+
+apply from: '../publish.gradle'
+
+version = '0.0.1-SNAPSHOT'
+
+//project.gradle.startParameter.excludedTaskNames.add('war')
+//assemble.dependsOn jar
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module('sample.gradle.multi:base-domain') with project(':base-domain')
+    }
+}
+
+dependencies {
+
+    api project(':base-domain')
+
+    providedCompile group: 'javax', name: 'javaee-web-api', version: '8.0.1'
+
+    // フレームワーク
+    api group: 'org.primefaces', name: 'primefaces', version: '8.0'
+    api group: 'org.primefaces.themes', name: 'all-themes', version: '1.0.10'
+
+    def cargoVersion = '1.7.10'
+    cargo "org.codehaus.cargo:cargo-core-uberjar:${cargoVersion}",
+          "org.codehaus.cargo:cargo-ant:${cargoVersion}"
+
+}
+
+jar {
+    into('META-INF/resources') {
+        from webAppDir
+    }
+
+}
+
+eclipse.wtp {
+    component { contextPath  = contextPath }
+}
+
+cargo {
+
+    containerId = cargoContainerId
+    port = Integer.parseInt(cargoPort)
+
+    deployable {
+        context = contextPath
+    }
+
+    local {
+        // 開始タスク：clean cargoStartLocal
+        // 終了タスク：cargoStopLocal
+        homeDir = file(cargoLocalApServerHome)
+        startStopTimeout = 60000
+    }
+
+    remote {
+        // タスク：clean cargoRedeployRemote
+        hostname = cargoHostName
+        username = cargoHostUser
+        password = cargoHostPassword
+    }
+
+}

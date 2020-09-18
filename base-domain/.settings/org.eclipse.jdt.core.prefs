@@ -1,0 +1,8 @@
+#
+#Sat Sep 19 00:58:28 JST 2020
+org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=14
+org.eclipse.jdt.core.compiler.source=14
+eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
+org.eclipse.jdt.core.compiler.compliance=14
