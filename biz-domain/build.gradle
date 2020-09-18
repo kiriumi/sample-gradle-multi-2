@@ -1,0 +1,10 @@
+plugins {
+    id 'java-library'
+}
+
+apply from: '../publish.gradle'
+
+dependencies {
+
+    api project(':base-domain')
+}

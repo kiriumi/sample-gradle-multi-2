@@ -1,0 +1,42 @@
+plugins {
+    id 'war'
+    id 'eclipse-wtp'
+    id 'distribution'
+}
+
+dependencies {
+    implementation project(':base-web')
+    implementation project(':biz-domain')
+}
+
+ext {
+    tmpDistsDir = file("${buildDir}/tmpDistributions")
+}
+
+task preDist {
+
+    doLast {
+        copy {
+            from 'server-root'
+            into tmpDistsDir
+        }
+
+        copy {
+            from libsDir
+            into file("${tmpDistsDir}/eap")
+        }
+    }
+}
+
+distributions {
+
+    main {
+        distributionBaseName = 'distributions'
+
+        contents {
+            from tmpDistsDir
+        }
+    }
+}
+
+distZip.dependsOn preDist
