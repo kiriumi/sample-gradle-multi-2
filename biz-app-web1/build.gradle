@@ -4,6 +4,7 @@ plugins {
     id 'distribution'
 }
 
+apply from: '../gradle/scripts/test.gradle'
 apply from: '../gradle/scripts/distribution.gradle'
 
 dependencies {

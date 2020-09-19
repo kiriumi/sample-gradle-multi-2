@@ -12,7 +12,7 @@ allprojects {
     }
 }
 
-subprojects{
+subprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
@@ -22,12 +22,6 @@ subprojects{
         sourceCompatibility = JavaVersion.VERSION_14
         targetCompatibility = JavaVersion.VERSION_14
     }
-
-    dependencies {
-
-        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
-    }
-
 }
 
 wrapper {

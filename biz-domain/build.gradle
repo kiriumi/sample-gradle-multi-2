@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
 }
 
+apply from: '../gradle/scripts/test.gradle'
 apply from: '../gradle/scripts/publish.gradle'
 
 version = '1.0.0-SNAPSHOT'

@@ -5,12 +5,10 @@ plugins {
     id "com.bmuschko.cargo" version "2.7.1"
 }
 
+apply from: '../gradle/scripts/test.gradle'
 apply from: '../gradle/scripts/publish.gradle'
 
 version = '0.0.1-SNAPSHOT'
-
-//project.gradle.startParameter.excludedTaskNames.add('war')
-//assemble.dependsOn jar
 
 dependencies {
 
@@ -32,7 +30,6 @@ jar {
     into('META-INF/resources') {
         from webAppDir
     }
-
 }
 
 eclipse.wtp {
@@ -63,3 +60,5 @@ cargo {
     }
 
 }
+
+println  project.name + ':' + project.plugins.hasPlugin('war')
