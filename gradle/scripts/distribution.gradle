@@ -35,7 +35,6 @@ task preDist {
 distributions {
 
     main {
-
         def now = LocalDateTime.now();
         def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
 
@@ -48,3 +47,4 @@ distributions {
 }
 
 distZip.dependsOn preDist
+

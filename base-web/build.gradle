@@ -60,5 +60,3 @@ cargo {
     }
 
 }
-
-println  project.name + ':' + project.plugins.hasPlugin('war')

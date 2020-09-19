@@ -6,3 +6,33 @@ dependencies {
     implementation projectIfPresent(':base-batch')
     implementation projectIfPresent(':biz-domain')
 }
+
+sourceSets.main {
+    resources {
+        // Javaパッケージ内にあるJava以外のリソースを含めるため
+        srcDir 'src/main/java'
+    }
+}
+
+archiveNames.split(',').each { archiveName ->
+
+    archiveName = archiveName.trim()
+
+    task "jar${archiveName}"(type: Jar) {
+
+        archiveBaseName = archiveName
+        from tasks.compileJava.destinationDir, tasks.processResources.destinationDir
+        include "**/${archiveName}/**/*"
+        includeEmptyDirs false
+    }
+}
+
+task jarAll {
+
+    dependsOn classes
+
+    archiveNames.split(',').each { archiveName ->
+        archiveName = archiveName.trim()
+        dependsOn "jar${archiveName}"
+    }
+}
