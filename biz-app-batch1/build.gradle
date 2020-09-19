@@ -29,10 +29,18 @@ archiveNames.split(',').each { archiveName ->
 
 task jarAll {
 
-    dependsOn classes
-
     archiveNames.split(',').each { archiveName ->
         archiveName = archiveName.trim()
         dependsOn "jar${archiveName}"
     }
+}
+
+jar {
+    jar.dependsOn jarAll
+
+    doLast {
+        // デフォルトで作成されるJarを削除
+        println archiveFile.getAsFile().get().delete()
+    }
+
 }
