@@ -7,14 +7,18 @@ dependencies {
     implementation projectIfPresent(':biz-domain')
 }
 
-sourceSets.main {
-    resources {
+sourceSets {
+    main.resources {
         // Javaパッケージ内にあるJava以外のリソースを含めるため
         srcDir 'src/main/java'
     }
+
+    server.resources {
+        srcDir 'src/server/conf'
+    }
 }
 
-archiveNames.split(',').each { archiveName ->
+archiveNames.split().each { archiveName ->
 
     archiveName = archiveName.trim()
 

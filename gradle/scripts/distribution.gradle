@@ -16,6 +16,7 @@ task preDist {
             copy {
                 from configurations.runtimeClasspath
                 into libsDirectory.dir('dependencies')
+                exclude 'base-*', 'biz-*'
             }
         }
 
@@ -38,7 +39,7 @@ distributions {
         def now = LocalDateTime.now();
         def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
 
-        distributionBaseName = "dists-${formatter.format(now)}"
+        distributionBaseName = "${project.name}-${formatter.format(now)}"
 
         contents {
             from tmpDistsDirectory
