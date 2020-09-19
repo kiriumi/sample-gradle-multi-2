@@ -21,7 +21,7 @@ subprojects {
 
     sourceSets {
         server.resources {
-            srcDirs = [ file("${serverDir}/release/conf") ]
+            srcDirs = [ file("${serverReleaseDir}/conf") ]
         }
     }
 

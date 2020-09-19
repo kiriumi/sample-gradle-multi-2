@@ -27,13 +27,13 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="output" path="bin/default"/>
-	<classpathentry output="bin/server" kind="src" path="src/server/conf">
+	<classpathentry output="bin/server" kind="src" path="src/server/release/conf">
 		<attributes>
 			<attribute name="gradle_scope" value="server"/>
 			<attribute name="gradle_used_by_scope" value="server"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="output" path="bin/default"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-14/"/>
 	<classpathentry kind="src" path="/base-domain"/>
 	<classpathentry sourcepath="C:/Users/kengo/.gradle/caches/modules-2/files-2.1/org.mybatis/mybatis/3.5.5/e47e37cfedc198079ef72ff84ca7563371e2828e/mybatis-3.5.5-sources.jar" kind="lib" path="C:/Users/kengo/.gradle/caches/modules-2/files-2.1/org.mybatis/mybatis/3.5.5/1c8974cdec88c9259b6fa21147ea4538216e447/mybatis-3.5.5.jar">

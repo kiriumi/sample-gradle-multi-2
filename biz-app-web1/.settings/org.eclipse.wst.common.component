@@ -8,6 +8,7 @@
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/server/conf"/>
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/server/release/conf"/>
 		<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/base-web/base-web">
 			<dependency-type>uses</dependency-type>
 		</dependent-module>
