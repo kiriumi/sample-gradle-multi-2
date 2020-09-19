@@ -1,0 +1,49 @@
+import java.time.format.DateTimeFormatter;
+
+apply plugin: 'distribution'
+//apply plugin: 'java-library-distribution'
+
+ext {
+    tmpDistsDir = file("${buildDir}/tmpDistributions")
+}
+
+task preDist {
+
+    doLast {
+
+        if(!plugins.hasPlugin('war')) {
+            // バッチプロジェクトのみ、依存ライブラリを取得する
+            copy {
+                from configurations.runtimeClasspath
+                into file("${libsDir}/dependencies")
+            }
+        }
+
+        copy {
+            from 'server-root'
+            into tmpDistsDir
+        }
+
+        copy {
+            from libsDir
+            into file("${tmpDistsDir}/lib")
+        }
+    }
+}
+
+distributions {
+
+    main {
+
+        def now = LocalDateTime.now();
+        def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
+
+        distributionBaseName = "dists-${formatter.format(now)}"
+
+        contents {
+            from tmpDistsDir
+        }
+    }
+}
+
+distZip.dependsOn preDist

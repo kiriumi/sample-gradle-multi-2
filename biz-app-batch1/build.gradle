@@ -1,49 +1,7 @@
-plugins {
-    //id 'java-library-distribution'
-    id 'distribution'
-}
+apply from: '../distribution.gradle'
 
 dependencies {
 
     implementation project(':base-batch')
     implementation project(':biz-domain')
 }
-
-ext {
-    tmpDistsDir = file("${buildDir}/tmpDistributions")
-}
-
-task copyDependencies(type: Copy) {
-    from configurations.runtimeClasspath
-    into file("${libsDir}/dependencies")
-}
-
-task preDist {
-
-    dependsOn copyDependencies
-
-    doLast {
-        copy {
-            from 'server-root'
-            into tmpDistsDir
-        }
-
-        copy {
-            from libsDir
-            into file("${tmpDistsDir}/lib")
-        }
-    }
-}
-
-distributions {
-
-    main {
-        distributionBaseName = 'distributions'
-
-        contents {
-            from tmpDistsDir
-        }
-    }
-}
-
-distZip.dependsOn preDist
