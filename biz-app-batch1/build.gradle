@@ -1,4 +1,4 @@
-apply from: '../distribution.gradle'
+apply from: '../gradle/scripts/distribution.gradle'
 
 dependencies {
 
