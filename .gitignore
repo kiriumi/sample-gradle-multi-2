@@ -31,4 +31,8 @@ bin
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
-gradle/wrapper/gradle-wrapper.properties
+
+################
+#  Custom
+################
+!**/src/**/bin
