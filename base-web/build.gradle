@@ -12,12 +12,6 @@ version = '0.0.1-SNAPSHOT'
 //project.gradle.startParameter.excludedTaskNames.add('war')
 //assemble.dependsOn jar
 
-configurations.all {
-    resolutionStrategy.dependencySubstitution {
-        substitute module('sample.gradle.multi:base-domain') with project(':base-domain')
-    }
-}
-
 dependencies {
 
     api project(':base-domain')

@@ -22,6 +22,20 @@ subprojects{
         targetCompatibility = JavaVersion.VERSION_14
     }
 
+    configurations.all {
+
+        // 依存するサブプロジェクトがない場合、ライブラリを参照するように切り替える
+        resolutionStrategy.dependencySubstitution.all { DependencySubstitution dependency ->
+
+            if (dependency.requested instanceof ProjectComponentSelector) {
+                def targetProject = findProject(":${dependency.requested.path}")
+                if (targetProject == null) {
+                    dependency.useTarget "${group}:" + dependency.requested.path + ":+"
+                }
+            }
+        }
+    }
+
     dependencies {
 
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
