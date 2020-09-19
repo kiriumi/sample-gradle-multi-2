@@ -7,106 +7,97 @@ ext {
      tmpDistsDir = buildDirectory.dir('tmpDistributions').get()
 }
 
-task preDist {
+task preDistWar { doLast {
 
-    doLast {
-
-        if(plugins.hasPlugin('war')) {
-            // Webアプリケーションの場合
+    if(plugins.hasPlugin('war')) {
+        // Webアプリケーションの場合
+        copy {
             from libsDirectory
             into file("${tmpDistsDir}/web")
-
-        } else {
-            // バッチアプリケーションの場合
-            copy {
-                from libsDirectory
-                into file("${tmpDistsDir}/lib")
-
-                deployJars.split().each {
-                    include it
-                }
-
-                if(deployJars.isEmpty()) {
-                    exclude '*'
-                }
-            }
-
-            // 依存ライブラリを取得する
-            copy {
-                from configurations.runtimeClasspath
-                into file("${tmpDistsDir}/lib/dependencies")
-                exclude 'base-*', 'biz-*'
-
-                deployDependencies.split().each {
-                    include it
-                }
-
-                if(deployDependencies.isEmpty()) {
-                    exclude '*'
-                }
-            }
         }
+    }
+}}
 
-        // 設定ファイル
+task preDistJars { doLast {
+
+    if(!plugins.hasPlugin('war')) {
+
         copy {
-            from "${serverReleaseDir}/conf"
-            into "${tmpDistsDir}/conf"
+            from libsDirectory
+            into file("${tmpDistsDir}/lib")
 
-            deplohConfs.split().each {
+            deployJars.split().each {
                 include it
             }
 
-            if(deplohConfs.isEmpty()) {
+            if(deployJars.isEmpty()) {
                 exclude '*'
             }
         }
 
-        // 該当のステージング環境のリソースに差替え
         copy {
-            if(stage.toLowerCase() != 'release') {
-                from "${serverDir}/${stage}/conf"
-                into "${tmpDistsDir}/conf"
-            }
+            from configurations.runtimeClasspath
+            into file("${tmpDistsDir}/lib/dependencies")
+            exclude 'base-*', 'biz-*' // 自分のプロジェクトで作成したJarは除外
 
-            deplohConfs.split().each {
+            deployDependencies.split().each {
                 include it
             }
 
-            if(deplohConfs.isEmpty()) {
+            if(deployDependencies.isEmpty()) {
                 exclude '*'
-            }
-        }
-
-        // バイナリファイル
-        copy {
-            from "${serverReleaseDir}/bin"
-            into "${tmpDistsDir}/bin"
-
-            deployBins.split().each {
-                include it
-            }
-
-            if(deployBins.isEmpty()) {
-                exclude '*'
-            }
-        }
-
-        // 該当のステージング環境のリソースに差替え
-        copy {
-            if(stage.toLowerCase() != 'release') {
-                from "${serverDir}/${stage}/bin"
-                into "${tmpDistsDir}/bin"
-
-                deployBins.split().each {
-                    include it
-                }
-
-                if(deployBins.isEmpty()) {
-                    exclude '*'
-                }
             }
         }
     }
+}}
+
+task preDistBins { doLast{
+
+    copy {
+        from "${serverReleaseDir}/bin"
+
+        // 該当のステージング環境のリソースに差替え
+        if(stage.toLowerCase() != 'release') {
+            from "${serverDir}/${stage}/bin"
+        }
+
+        deployBins.split().each {
+            include it
+        }
+
+        if(deployBins.isEmpty()) {
+            exclude '*'
+        }
+
+        into "${tmpDistsDir}/bin"
+    }
+}}
+
+task preDistConfs { doLast{
+
+    copy {
+        from "${serverReleaseDir}/conf"
+
+        // 該当のステージング環境のリソースに差替え
+        if(stage.toLowerCase() != 'release') {
+            from "${serverDir}/${stage}/conf"
+        }
+
+        deplohConfs.split().each {
+            include it
+        }
+
+        if(deplohConfs.isEmpty()) {
+            exclude '*'
+        }
+
+        into "${tmpDistsDir}/conf"
+    }
+}}
+
+
+task preDist {
+    dependsOn preDistWar, preDistJars , preDistBins, preDistConfs
 }
 
 distributions {
