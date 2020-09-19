@@ -7,17 +7,6 @@ dependencies {
     implementation projectIfPresent(':biz-domain')
 }
 
-sourceSets {
-    main.resources {
-        // Javaパッケージ内にあるJava以外のリソースを含めるため
-        srcDir 'src/main/java'
-    }
-
-    server.resources {
-        srcDir 'src/server/conf'
-    }
-}
-
 archiveNames.split().each { archiveName ->
 
     archiveName = archiveName.trim()
@@ -33,7 +22,7 @@ archiveNames.split().each { archiveName ->
 
 task jarAll {
 
-    archiveNames.split(',').each { archiveName ->
+    archiveNames.split().each { archiveName ->
         archiveName = archiveName.trim()
         dependsOn "jar${archiveName}"
     }
@@ -46,5 +35,4 @@ jar {
         // デフォルトで作成されるJarを削除
         println archiveFile.getAsFile().get().delete()
     }
-
 }

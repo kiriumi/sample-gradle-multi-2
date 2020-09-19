@@ -14,9 +14,14 @@ allprojects {
 
 subprojects {
 
+    ext {
+         serverDir = file('src/server')
+         serverReleaseDir = file("${serverDir}/release")
+    }
+
     sourceSets {
         server.resources {
-            srcDir 'src/server/conf'
+            srcDirs = [ file("${serverDir}/release/conf") ]
         }
     }
 

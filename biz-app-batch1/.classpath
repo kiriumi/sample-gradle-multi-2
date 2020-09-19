@@ -20,7 +20,10 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="bin/server" path="src/server/conf">
+	<classpathentry kind="src" path="/base-batch"/>
+	<classpathentry kind="src" path="/biz-domain"/>
+	<classpathentry kind="src" path="/base-domain"/>
+	<classpathentry kind="src" output="bin/server" path="src/server/release/conf">
 		<attributes>
 			<attribute name="gradle_scope" value="server"/>
 			<attribute name="gradle_used_by_scope" value="server"/>
@@ -28,8 +31,5 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-14/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="src" path="/base-batch"/>
-	<classpathentry kind="src" path="/biz-domain"/>
-	<classpathentry kind="src" path="/base-domain"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

@@ -4,32 +4,108 @@ apply plugin: 'distribution'
 //apply plugin: 'java-library-distribution'
 
 ext {
-     tmpDistsDirectory = buildDirectory.dir('tmpDistributions')
+     tmpDistsDir = buildDirectory.dir('tmpDistributions').get()
 }
 
 task preDist {
 
     doLast {
 
-        if(!plugins.hasPlugin('war')) {
-            // バッチプロジェクトのみ、依存ライブラリを取得する
+        if(plugins.hasPlugin('war')) {
+            // Webアプリケーションの場合
+            from libsDirectory
+            into file("${tmpDistsDir}/web")
+
+        } else {
+            // バッチアプリケーションの場合
+            copy {
+                from libsDirectory
+                into file("${tmpDistsDir}/lib")
+
+                deployJars.split().each {
+                    include it
+                }
+
+                if(deployJars.isEmpty()) {
+                    exclude '*'
+                }
+            }
+
+            // 依存ライブラリを取得する
             copy {
                 from configurations.runtimeClasspath
-                into libsDirectory.dir('dependencies')
+                into file("${tmpDistsDir}/lib/dependencies")
                 exclude 'base-*', 'biz-*'
+
+                deployDependencies.split().each {
+                    include it
+                }
+
+                if(deployDependencies.isEmpty()) {
+                    exclude '*'
+                }
             }
         }
 
+        // 設定ファイル
         copy {
-            from 'server-root'
-            into tmpDistsDirectory
+            from "${serverReleaseDir}/conf"
+            into "${tmpDistsDir}/conf"
+
+            deplohConfs.split().each {
+                include it
+            }
+
+            if(deplohConfs.isEmpty()) {
+                exclude '*'
+            }
         }
 
+        // 該当のステージング環境のリソースに差替え
         copy {
-            from libsDirectory
-            into file("${tmpDistsDirectory.get()}/lib")
+            if(stage.toLowerCase() != 'release') {
+                from "${serverDir}/${stage}/conf"
+                into "${tmpDistsDir}/conf"
+            }
 
-       }
+            deplohConfs.split().each {
+                include it
+            }
+
+            if(deplohConfs.isEmpty()) {
+                exclude '*'
+            }
+        }
+
+        // バイナリファイル
+        copy {
+            from "${serverReleaseDir}/bin"
+            into "${tmpDistsDir}/bin"
+
+            deployBins.split().each {
+                include it
+            }
+
+            if(deployBins.isEmpty()) {
+                exclude '*'
+            }
+        }
+
+        // 該当のステージング環境のリソースに差替え
+        copy {
+            if(stage.toLowerCase() != 'release') {
+                from "${serverDir}/${stage}/bin"
+                into "${tmpDistsDir}/bin"
+
+                deployBins.split().each {
+                    include it
+                }
+
+                if(deployBins.isEmpty()) {
+                    exclude '*'
+                }
+            }
+        }
     }
 }
 
@@ -42,10 +118,9 @@ distributions {
         distributionBaseName = "${project.name}-${formatter.format(now)}"
 
         contents {
-            from tmpDistsDirectory
+            from tmpDistsDir
         }
     }
 }
 
 distZip.dependsOn preDist
-
