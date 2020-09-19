@@ -1,0 +1,20 @@
+/*
+ * 外部Gradleプラグインのクラスパスを設定
+ *
+ */
+repositories {
+    maven { url 'https://plugins.gradle.org/m2/' }
+}
+
+configurations.all {
+    // 使用するgroovy-allのバージョン競合回避のため、使用するバージョンを指定
+    //resolutionStrategy { force group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.15' }
+}
+
+dependencies {
+
+    implementation "gradle.plugin.org.flywaydb:gradle-plugin-publishing:7.0.0-beta1"
+    implementation "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.5.0"
+    implementation "org.hidetake:gradle-ssh-plugin:2.10.1"
+    implementation "at.bxm.gradleplugins:gradle-svntools-plugin:3.1"
+}
