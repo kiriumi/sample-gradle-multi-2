@@ -2,6 +2,7 @@ plugins {
     id 'war'
     id 'eclipse-wtp'
     id 'distribution'
+    id "com.bmuschko.cargo" version "2.7.1"
 }
 
 apply from: '../gradle/scripts/test.gradle'
@@ -10,4 +11,31 @@ apply from: '../gradle/scripts/distribution.gradle'
 dependencies {
     implementation projectIfPresent(':base-web')
     implementation projectIfPresent(':biz-domain')
+}
+
+cargo {
+
+    containerId = cargoContainerId
+    port = Integer.parseInt(cargoPort)
+
+    deployable {
+        // ページを表示するためのURL：http://{ホスト名}/contextPath/{ページ名}
+        //   例：http://localhost:8080/SampleWebApp/login.xhtml
+        context = contextPath
+    }
+
+    local {
+        // 開始タスク：clean cargoStartLocal
+        // 終了タスク：cargoStopLocal
+        homeDir = file(cargoLocalApServerHome)
+        startStopTimeout = 60000
+    }
+
+    remote {
+        // タスク：clean cargoRedeployRemote
+        hostname = cargoHostName
+        username = cargoHostUser
+        password = cargoHostPassword
+    }
+
 }

@@ -7,6 +7,7 @@ plugins {
 
 apply from: '../gradle/scripts/test.gradle'
 apply from: '../gradle/scripts/publish.gradle'
+apply from: '../gradle/scripts/distribution.gradle'
 
 version = '0.0.1-SNAPSHOT'
 
@@ -51,12 +52,4 @@ cargo {
         homeDir = file(cargoLocalApServerHome)
         startStopTimeout = 60000
     }
-
-    remote {
-        // タスク：clean cargoRedeployRemote
-        hostname = cargoHostName
-        username = cargoHostUser
-        password = cargoHostPassword
-    }
-
 }

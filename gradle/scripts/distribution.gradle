@@ -7,24 +7,16 @@ ext {
      tmpDistsDir = buildDirectory.dir('tmpDistributions').get()
 }
 
-task preDistWar { doLast {
+task preDistArchives { doLast {
 
-    if(plugins.hasPlugin('war')) {
-        // Webアプリケーションの場合
-        copy {
-            from libsDirectory
-            into file("${tmpDistsDir}/web")
-        }
-    }
-}}
+    // 公開するWebアプリケーションは、WebアプリケーションのWEB-INF/libに入れるため、配布物にしない
+    if(plugins.hasPlugin('war') && plugins.hasPlugin('maven-publish')) { return }
 
-task preDistJars { doLast {
+    copy {
+        from libsDirectory
+        into file("${tmpDistsDir}/lib")
 
-    if(!plugins.hasPlugin('war')) {
-
-        copy {
-            from libsDirectory
-            into file("${tmpDistsDir}/lib")
+        if(project.hasProperty('deployJars')) {
 
             deployJars.split().each {
                 include it
@@ -34,24 +26,29 @@ task preDistJars { doLast {
                 exclude '*'
             }
         }
+    }
 
-        copy {
-            from configurations.runtimeClasspath
-            into file("${tmpDistsDir}/lib/dependencies")
-            exclude 'base-*', 'biz-*' // 自分のプロジェクトで作成したJarは除外
+    if(!project.hasProperty('deployDependencies')) { return }
 
-            deployDependencies.split().each {
-                include it
-            }
+    copy {
+        from configurations.runtimeClasspath
+        into file("${tmpDistsDir}/lib/dependencies")
+        exclude 'base-*', 'biz-*' // 自分のプロジェクトで作成したJarは除外
 
-            if(deployDependencies.isEmpty()) {
-                exclude '*'
-            }
+        deployDependencies.split().each {
+            include it
+        }
+
+        if(deployDependencies.isEmpty()) {
+            exclude '*'
         }
     }
+
 }}
 
 task preDistBins { doLast{
+
+    if(!project.hasProperty('deployBins')) { return }
 
     copy {
         from "${serverReleaseDir}/bin"
@@ -75,6 +72,8 @@ task preDistBins { doLast{
 
 task preDistConfs { doLast{
 
+    if(!project.hasProperty('deplohConfs')) { return }
+
     copy {
         from "${serverReleaseDir}/conf"
 
@@ -95,9 +94,8 @@ task preDistConfs { doLast{
     }
 }}
 
-
 task preDist {
-    dependsOn preDistWar, preDistJars , preDistBins, preDistConfs
+    dependsOn preDistArchives , preDistBins, preDistConfs
 }
 
 distributions {
@@ -115,3 +113,7 @@ distributions {
 }
 
 distZip.dependsOn preDist
+distZip.mustRunAfter tasks.jar
+if(plugins.hasPlugin('war')) {
+    distZip.mustRunAfter tasks.war
+}
