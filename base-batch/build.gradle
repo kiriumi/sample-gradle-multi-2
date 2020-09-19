@@ -6,6 +6,6 @@ apply from: '../gradle/scripts/publish.gradle'
 
 dependencies {
 
-    api project(':base-domain')
+    api projectIfPresent(':base-domain')
     api group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: '2.3.4.RELEASE'
 }

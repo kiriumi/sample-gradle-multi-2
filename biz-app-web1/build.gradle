@@ -7,6 +7,6 @@ plugins {
 apply from: '../gradle/scripts/distribution.gradle'
 
 dependencies {
-    implementation project(':base-web')
-    implementation project(':biz-domain')
+    implementation projectIfPresent(':base-web')
+    implementation projectIfPresent(':biz-domain')
 }

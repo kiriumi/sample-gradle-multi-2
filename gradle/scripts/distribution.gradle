@@ -4,7 +4,7 @@ apply plugin: 'distribution'
 //apply plugin: 'java-library-distribution'
 
 ext {
-    tmpDistsDir = file("${buildDir}/tmpDistributions")
+     tmpDistsDirectory = buildDirectory.dir('tmpDistributions')
 }
 
 task preDist {
@@ -15,19 +15,20 @@ task preDist {
             // バッチプロジェクトのみ、依存ライブラリを取得する
             copy {
                 from configurations.runtimeClasspath
-                into file("${libsDir}/dependencies")
+                into libsDirectory.dir('dependencies')
             }
         }
 
         copy {
             from 'server-root'
-            into tmpDistsDir
+            into tmpDistsDirectory
         }
 
         copy {
-            from libsDir
-            into file("${tmpDistsDir}/lib")
-        }
+            from libsDirectory
+            into file("${tmpDistsDirectory.get()}/lib")
+
+       }
     }
 }
 
@@ -41,7 +42,7 @@ distributions {
         distributionBaseName = "dists-${formatter.format(now)}"
 
         contents {
-            from tmpDistsDir
+            from tmpDistsDirectory
         }
     }
 }

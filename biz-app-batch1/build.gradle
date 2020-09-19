@@ -2,6 +2,6 @@ apply from: '../gradle/scripts/distribution.gradle'
 
 dependencies {
 
-    implementation project(':base-batch')
-    implementation project(':biz-domain')
+    implementation projectIfPresent(':base-batch')
+    implementation projectIfPresent(':biz-domain')
 }

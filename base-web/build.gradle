@@ -14,7 +14,7 @@ version = '0.0.1-SNAPSHOT'
 
 dependencies {
 
-    api project(':base-domain')
+    api projectIfPresent(':base-domain')
 
     providedCompile group: 'javax', name: 'javaee-web-api', version: '8.0.1'
 

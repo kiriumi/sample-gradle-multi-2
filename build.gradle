@@ -2,16 +2,17 @@ allprojects {
 
     apply plugin: 'java'
 
+    group = 'sample.gradle.multi'
+
     repositories {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://repository.primefaces.org/" }
+        mavenLocal()
     }
 }
 
 subprojects{
-
-    group = 'sample.gradle.multi'
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
@@ -20,20 +21,6 @@ subprojects{
     java {
         sourceCompatibility = JavaVersion.VERSION_14
         targetCompatibility = JavaVersion.VERSION_14
-    }
-
-    configurations.all {
-
-        // 依存するサブプロジェクトがない場合、ライブラリを参照するように切り替える
-        resolutionStrategy.dependencySubstitution.all { DependencySubstitution dependency ->
-
-            if (dependency.requested instanceof ProjectComponentSelector) {
-                def targetProject = findProject(":${dependency.requested.path}")
-                if (targetProject == null) {
-                    dependency.useTarget "${group}:" + dependency.requested.path + ":+"
-                }
-            }
-        }
     }
 
     dependencies {
@@ -45,4 +32,14 @@ subprojects{
 
 wrapper {
     gradleVersion = '6.3'
+}
+
+def projectIfPresent(String projectPath) {
+
+    if(findProject(projectPath)) {
+        return project(projectPath)
+    }
+
+    def projectName = projectPath.substring(1)
+    return "${group}:${projectName}:latest.integration"
 }

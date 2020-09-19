@@ -4,7 +4,9 @@ plugins {
 
 apply from: '../gradle/scripts/publish.gradle'
 
+version = '1.0.0-SNAPSHOT'
+
 dependencies {
 
-    api project(':base-domain')
+    api projectIfPresent(':base-domain')
 }

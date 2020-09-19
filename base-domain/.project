@@ -2,28 +2,26 @@
 <projectDescription>
 	<name>base-domain</name>
 	<comment></comment>
-	<projects>
-	</projects>
+	<projects/>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>net.harawata.mybatipse.MyBatisNature</nature>
+		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
+	</natures>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
+			<arguments/>
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
-			<arguments>
-			</arguments>
+			<arguments/>
 		</buildCommand>
 		<buildCommand>
 			<name>net.harawata.mybatipse.MapperValidationBuilder</name>
-			<arguments>
-			</arguments>
+			<arguments/>
 		</buildCommand>
 	</buildSpec>
-	<natures>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
-		<nature>net.harawata.mybatipse.MyBatisNature</nature>
-	</natures>
+	<linkedResources/>
+	<filteredResources/>
 </projectDescription>
