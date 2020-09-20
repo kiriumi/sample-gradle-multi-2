@@ -11,4 +11,7 @@ dependencies {
     // CT以降で使用するプラグイン
     implementation "at.bxm.gradleplugins:gradle-svntools-plugin:3.1"
     implementation "org.hidetake:gradle-ssh-plugin:2.10.1"
+
+    // Webアプリケーションのデプロイ
+    implementation "com.bmuschko:gradle-cargo-plugin:2.7.1"
 }

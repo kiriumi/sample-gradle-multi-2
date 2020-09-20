@@ -11,12 +11,19 @@ allprojects {
     repositories {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://repository.primefaces.org/" }
         mavenLocal()
     }
 }
 
 subprojects {
+
+    repositories {
+        maven { url "https://repository.primefaces.org/" }
+    }
+
+    apply from: '../master/scripts/java.gradle'
+    apply from: '../master/scripts/test.gradle'
+    apply from: '../master/scripts/distribution.gradle'
 
     ext {
          serverDir = file('src/server')
@@ -27,13 +34,6 @@ subprojects {
         server.resources {
             srcDirs = [ file("${serverReleaseDir}/conf") ]
         }
-    }
-
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_14
-        targetCompatibility = JavaVersion.VERSION_14
     }
 }
 

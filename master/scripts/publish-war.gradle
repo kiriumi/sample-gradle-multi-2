@@ -1,0 +1,8 @@
+apply plugin: 'war'
+apply from: '../master/scripts/publish.gradle'
+
+jar {
+    into('META-INF/resources') {
+        from webAppDir
+    }
+}

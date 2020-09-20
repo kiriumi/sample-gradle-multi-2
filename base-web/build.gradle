@@ -1,15 +1,7 @@
-plugins {
-    id 'java-library'
-    id 'war'
-    id 'eclipse-wtp'
-    id "com.bmuschko.cargo" version "2.7.1"
-}
+apply from: '../master/scripts/war.gradle'
+apply from: '../master/scripts/publish-war.gradle'
 
-apply from: '../master/scripts/test.gradle'
-apply from: '../master/scripts/publish.gradle'
-apply from: '../master/scripts/distribution.gradle'
-
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
 
 dependencies {
 
@@ -20,36 +12,4 @@ dependencies {
     // フレームワーク
     api group: 'org.primefaces', name: 'primefaces', version: '8.0'
     api group: 'org.primefaces.themes', name: 'all-themes', version: '1.0.10'
-
-    def cargoVersion = '1.7.10'
-    cargo "org.codehaus.cargo:cargo-core-uberjar:${cargoVersion}",
-          "org.codehaus.cargo:cargo-ant:${cargoVersion}"
-
-}
-
-jar {
-    into('META-INF/resources') {
-        from webAppDir
-    }
-}
-
-eclipse.wtp {
-    component { contextPath  = contextPath }
-}
-
-cargo {
-
-    containerId = cargoContainerId
-    port = Integer.parseInt(cargoPort)
-
-    deployable {
-        context = contextPath
-    }
-
-    local {
-        // 開始タスク：clean cargoStartLocal
-        // 終了タスク：cargoStopLocal
-        homeDir = file(cargoLocalApServerHome)
-        startStopTimeout = 60000
-    }
 }

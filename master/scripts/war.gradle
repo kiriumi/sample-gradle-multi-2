@@ -1,0 +1,43 @@
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'com.bmuschko.cargo'
+
+dependencies {
+
+    def cargoVersion = '1.7.10'
+    cargo "org.codehaus.cargo:cargo-core-uberjar:${cargoVersion}",
+          "org.codehaus.cargo:cargo-ant:${cargoVersion}"
+
+}
+
+eclipse.wtp {
+    component { contextPath  = contextPath }
+}
+
+cargo {
+
+    containerId = cargoContainerId
+    port = Integer.parseInt(cargoPort)
+
+    deployable {
+        context = contextPath
+    }
+
+    local {
+        // 開始タスク：clean cargoStartLocal
+        // 終了タスク：cargoStopLocal
+        homeDir = file(cargoLocalApServerHome)
+        startStopTimeout = 60000
+    }
+
+    remote {
+        if(project.hasProperty('cargoHostName') && project.hasProperty('cargoHostUser') && project.hasProperty('cargoHostPassword')) {
+
+            // タスク：clean cargoRedeployRemote
+            hostname = cargoHostName
+            username = cargoHostUser
+            password = cargoHostPassword
+        }
+    }
+
+}
