@@ -1,1 +1,10 @@
-includeFlat 'base-domain', 'base-web', 'base-batch', 'biz-domain', 'biz-app-web1', 'biz-app-batch1', 'biz-app-batch2'
+// サブプロジェクトを配列で指定
+def includedSubprojects = [ 'base-domain', 'base-web', 'base-batch', 'biz-domain', 'biz-app-web1', 'biz-app-batch1', 'biz-app-batch2' ]
+
+// サブプロジェクトを探索
+def includes = []
+def subprojectsTree = fileTree(dir: settingsDir.parent, includes: includedSubprojects)
+subprojectsTree.visit { includes << it.name }
+
+// 見つかったサブプロジェクトをインクルード
+includes.each { includeFlat it }
