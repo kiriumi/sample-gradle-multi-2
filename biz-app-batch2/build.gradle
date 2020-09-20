@@ -1,0 +1,7 @@
+apply from: '../master/scripts/jar-bizbatch.gradle'
+
+dependencies {
+
+    implementation projectIfPresent(':base-batch')
+    implementation projectIfPresent(':biz-domain')
+}

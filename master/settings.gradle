@@ -1,1 +1,1 @@
-includeFlat 'base-domain', 'base-web', 'base-batch', 'biz-domain', 'biz-app-web1', 'biz-app-batch1'
+includeFlat 'base-domain', 'base-web', 'base-batch', 'biz-domain', 'biz-app-web1', 'biz-app-batch1', 'biz-app-batch2'
