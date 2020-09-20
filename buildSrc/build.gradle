@@ -3,6 +3,11 @@ repositories {
 }
 
 dependencies {
+
+    // UTで使用するプラグイン
+    implementation "gradle.plugin.org.flywaydb:gradle-plugin-publishing:7.0.0-beta1"
+    implementation "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.5.0"
+
     // CT以降で使用するプラグイン
     implementation "at.bxm.gradleplugins:gradle-svntools-plugin:3.1"
     implementation "org.hidetake:gradle-ssh-plugin:2.10.1"

@@ -1,6 +1,4 @@
-plugins {
-    id 'java-library'
-}
+apply plugin: 'java-library'
 
 apply from: '../gradle/scripts/test.gradle'
 apply from: '../gradle/scripts/publish.gradle'
