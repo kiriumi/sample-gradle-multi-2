@@ -1,2 +1,0 @@
-rootProject.name = 'sample-gradle-multi-2'
-include 'base-domain', 'base-web', 'base-batch', 'biz-domain', 'biz-app-web1', 'biz-app-batch1'

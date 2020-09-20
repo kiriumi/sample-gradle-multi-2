@@ -1,5 +1,5 @@
-apply from: '../gradle/scripts/test.gradle'
-apply from: '../gradle/scripts/distribution.gradle'
+apply from: '../master/scripts/test.gradle'
+apply from: '../master/scripts/distribution.gradle'
 
 dependencies {
 
