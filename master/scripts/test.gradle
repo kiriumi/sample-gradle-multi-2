@@ -14,9 +14,13 @@ dependencies {
     }
 }
 
+test {
+    useJUnitPlatform() // JUnit5を使う場合、必要
+}
+
 checkstyle {
     toolVersion = '8.36' // Gradleラッパーの場合、バージョン指定がないとエラーになる
-    configFile = file("${rootProject}/misc/checkstyle/google_checks.xml")
+    configFile = file("../master/checkstyle/google_checks.xml")
     sourceSets = [ sourceSets.main ]
     ignoreFailures = true
 }
@@ -30,4 +34,11 @@ pmd {
     ignoreFailures = true
 }
 
-test.finalizedBy jacocoTestReport
+jacoco {
+    toolVersion = "0.8.5"
+}
+
+jacocoTestReport {
+    dependsOn test // JaCoCoで計測前に、テスト実施が必須であるため
+}
+
