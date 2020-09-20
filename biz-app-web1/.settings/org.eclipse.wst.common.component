@@ -1,17 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
-	<wb-module deploy-name="biz-app-web1">
-		<property name="context-root" value="biz-app-web1"/>
-		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
-		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
-		<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/base-web/base-web">
-			<dependency-type>uses</dependency-type>
-		</dependent-module>
-		<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/biz-domain/biz-domain">
-			<dependency-type>uses</dependency-type>
-		</dependent-module>
-		<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/base-domain/base-domain">
-			<dependency-type>uses</dependency-type>
-		</dependent-module>
-	</wb-module>
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    	
+    <wb-module deploy-name="biz-app-web1">
+        		
+        <property name="context-root" value="biz-app-web1"/>
+        		
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
+        		
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
+        		
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/base-web/base-web">
+            			
+            <dependency-type>uses</dependency-type>
+            		
+        </dependent-module>
+        		
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/biz-domain/biz-domain">
+            			
+            <dependency-type>uses</dependency-type>
+            		
+        </dependent-module>
+        		
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/base-domain/base-domain">
+            			
+            <dependency-type>uses</dependency-type>
+            		
+        </dependent-module>
+        	
+    </wb-module>
+    
 </project-modules>
