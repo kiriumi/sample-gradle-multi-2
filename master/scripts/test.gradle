@@ -16,8 +16,8 @@ dependencies {
 
 checkstyle {
     toolVersion = '8.36' // Gradleラッパーの場合、バージョン指定がないとエラーになる
-    configFile = file('misc/checkstyle/google_checks.xml')
-    sourceSets = [sourceSets.main]
+    configFile = file("${rootProject}/misc/checkstyle/google_checks.xml")
+    sourceSets = [ sourceSets.main ]
     ignoreFailures = true
 }
 
@@ -26,7 +26,7 @@ spotbugs {
 }
 
 pmd {
-    sourceSets = [sourceSets.main]
+    sourceSets = [ sourceSets.main ]
     ignoreFailures = true
 }
 
