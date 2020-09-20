@@ -20,19 +20,19 @@
 ################
 bin
 
-# STS (Spring Tool Suite)
+# Spring Tool Suite
 .springBeans
 
 ################
 #  Gradle
 ################
-/.gradle/
-/build/
+.gradle
+build
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
 
 ################
-#  Custom
+#  Project
 ################
 !**/src/**/bin
