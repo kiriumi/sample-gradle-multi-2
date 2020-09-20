@@ -4,7 +4,15 @@ dependencies {
     implementation projectIfPresent(':biz-domain')
 }
 
-archiveNames.split().each { archiveName ->
+ext {
+    def javaSrcDir = sourceSets.main.java.srcDirs[0]
+    def groupPackageDir = group.replaceAll('\\.', '/')
+    def baseAppPackageDir = file("${javaSrcDir}/${groupPackageDir}/batch")
+    def appDirs = baseAppPackageDir.listFiles().findAll{ it.isDirectory() }
+    archiveNames = appDirs.collect{ it.name }
+}
+
+archiveNames.each { archiveName ->
 
     archiveName = archiveName.trim()
 
@@ -19,7 +27,7 @@ archiveNames.split().each { archiveName ->
 
 task jarAll {
 
-    archiveNames.split().each { archiveName ->
+    archiveNames.each { archiveName ->
         archiveName = archiveName.trim()
         dependsOn "jar${archiveName}"
     }
@@ -30,6 +38,6 @@ jar {
 
     doLast {
         // デフォルトで作成されるJarを削除
-        println archiveFile.getAsFile().get().delete()
+        archiveFile.getAsFile().get().delete()
     }
 }
