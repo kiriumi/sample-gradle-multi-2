@@ -7,7 +7,7 @@ ext {
      tmpDistsDir = buildDirectory.dir('tmpDistributions').get()
 }
 
-task preDistArchives { doLast {
+task preDistArchives.doLast {
 
     // 公開するWebアプリケーションは、WebアプリケーションのWEB-INF/libに入れるため、配布物にしない
     if(plugins.hasPlugin('war') && plugins.hasPlugin('maven-publish')) { return }
@@ -44,9 +44,9 @@ task preDistArchives { doLast {
         }
     }
 
-}}
+}
 
-task preDistBins { doLast{
+task preDistBins.doLast {
 
     if(!project.hasProperty('deployBins')) { return }
 
@@ -68,9 +68,9 @@ task preDistBins { doLast{
 
         into "${tmpDistsDir}/bin"
     }
-}}
+}
 
-task preDistConfs { doLast{
+task preDistConfs.doLast {
 
     if(!project.hasProperty('deplohConfs')) { return }
 
@@ -92,7 +92,7 @@ task preDistConfs { doLast{
 
         into "${tmpDistsDir}/conf"
     }
-}}
+}
 
 task preDist {
     dependsOn preDistArchives , preDistBins, preDistConfs
