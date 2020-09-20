@@ -98,6 +98,17 @@ task preDist {
     dependsOn preDistArchives , preDistBins, preDistConfs
 }
 
+/*
+ * Jar, Warのみを作成するタスク
+ * ※ Assembleタスクだと、distZipも実行されてしまうため
+ */
+task archive {
+    dependsOn jar
+    if(plugins.hasPlugin('war')) {
+        dependsOn war
+    }
+}
+
 distributions {
 
     main {
@@ -113,7 +124,3 @@ distributions {
 }
 
 distZip.dependsOn preDist
-distZip.mustRunAfter tasks.jar
-if(plugins.hasPlugin('war')) {
-    distZip.mustRunAfter tasks.war
-}
