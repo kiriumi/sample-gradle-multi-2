@@ -24,6 +24,7 @@ subprojects {
     apply from: '../master/scripts/java.gradle'
     apply from: '../master/scripts/test.gradle'
     apply from: '../master/scripts/distribution.gradle'
+    apply from: '../master/scripts/db-migration.gradle'
 
     ext {
          serverDir = file('src/server')
