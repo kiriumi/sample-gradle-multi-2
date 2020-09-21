@@ -1,5 +1,6 @@
 import java.time.format.DateTimeFormatter;
 
+apply plugin: 'distribution'
 apply plugin: 'at.bxm.svntools'
 
 allprojects {
@@ -7,6 +8,10 @@ allprojects {
     apply plugin: 'java'
 
     group = 'sample.gradle.multi'
+
+    ext {
+        tmpDistsDir = buildDirectory.dir('tmpDistributions').get()
+    }
 
     repositories {
         mavenCentral()
@@ -31,19 +36,71 @@ subprojects {
     }
 
     ext {
-         serverDir = file('src/server')
-         serverReleaseDir = file("${serverDir}/release")
+        serverDir = file('src/server')
+        serverReleaseDir = file("${serverDir}/release")
     }
 
     sourceSets {
         server.resources {
-            srcDirs = [ file("${serverReleaseDir}/conf") ]
+            srcDirs = [
+                file("${serverReleaseDir}/conf")
+            ]
         }
     }
 }
 
 wrapper {
     gradleVersion = '6.3'
+}
+
+task svnTag(type: at.bxm.gradleplugins.svntools.tasks.SvnTag) {
+
+    def now = LocalDateTime.now();
+    def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
+    tagName = "${formatter.format(now)}_${deployProjectName}"
+
+    commitMessage = "${project.name}-${formatter.format(now)}"
+}
+
+task preDistAllWeb { doLast {
+
+    subprojects.each { subproject ->
+
+        //Webアプリケーションのリソースは対象外
+        if(subproject.plugins.hasPlugin('war')) {
+
+            ant.copy(toDir: rootProject.tmpDistsDir,  preservelastmodified: 'true') {
+                fileset(dir: subproject.tmpDistsDir)
+            }
+        }
+    }
+}}
+
+task preDistAll { doLast {
+
+    subprojects.each { subproject ->
+
+        if(subproject.plugins.hasPlugin('war')) { return } // クロージャ内だとreturnがcontinueと同一
+
+        ant.copy(toDir: rootProject.tmpDistsDir,  preservelastmodified: 'true') {
+            fileset(dir: subproject.tmpDistsDir)
+        }
+    }
+
+}}
+
+distributions {
+
+    main {
+        def now = LocalDateTime.now();
+        def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
+
+        distributionBaseName = "${project.name}-${formatter.format(now)}"
+
+        contents {
+            from tmpDistsDir
+        }
+    }
 }
 
 def projectIfPresent(String projectPath) {
@@ -54,13 +111,4 @@ def projectIfPresent(String projectPath) {
 
     def projectName = projectPath.substring(1)
     return "${group}:${projectName}:latest.integration"
-}
-
-task svnTag(type: at.bxm.gradleplugins.svntools.tasks.SvnTag) {
-
-    def now = LocalDateTime.now();
-    def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
-    tagName = "${formatter.format(now)}_${deployProjectName}"
-
-    commitMessage = "${project.name}-${formatter.format(now)}"
 }

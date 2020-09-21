@@ -3,10 +3,6 @@ import java.time.format.DateTimeFormatter;
 apply plugin: 'distribution'
 //apply plugin: 'java-library-distribution'
 
-ext {
-     tmpDistsDir = buildDirectory.dir('tmpDistributions').get()
-}
-
 task preDistArchives { doLast {
 
     // 公開Jar（Web）はWebアプリケーションに入るため、配布物から除外する
@@ -26,6 +22,10 @@ task preDistArchives { doLast {
             if(deployJarsArray.size() == 0) { exclude(name: '*') }
         }
     }
+
+}}
+
+task preDistDependencies { doLast {
 
     // デプロイ対象の基盤Jarを配布ディレクトリにコピーする
     if(!project.hasProperty('deployDependencies')) { return }
@@ -85,7 +85,7 @@ task preDistConfs { doLast {
 }}
 
 task preDist {
-    dependsOn preDistArchives , preDistBins, preDistConfs
+    dependsOn preDistArchives, preDistDependencies, preDistBins, preDistConfs
 }
 
 distributions {
