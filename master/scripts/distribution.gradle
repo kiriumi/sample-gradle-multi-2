@@ -9,39 +9,33 @@ ext {
 
 task preDistArchives { doLast {
 
-    // 公開するWebアプリケーションは、WebアプリケーションのWEB-INF/libに入れるため、配布物にしない
+    // 公開Jar（Web）はWebアプリケーションに入るため、配布物から除外する
     if(plugins.hasPlugin('war') && plugins.hasPlugin('maven-publish')) { return }
 
-    copy {
-        from libsDirectory
-        into file("${tmpDistsDir}/lib")
+    // 公開JarまたはWarの場合、アーカイブ名名を取得する
+    def deployJarsArray = (plugins.hasPlugin('maven-publish') || plugins.hasPlugin('war')) ? [ "${project.archivesBaseName}*.*" ] : deployJars.split()
 
-        if(project.hasProperty('deployJars')) {
+    // Warの場合は、配置先ディレクトリ名をlibではなくwebにする
+    def destDirName = plugins.hasPlugin('war') ? 'web' : 'lib'
 
-            deployJars.split().each {
-                include it
-            }
+    // デプロイ対象のアーカイブを配布ディレクトリにコピーする
+    ant.copy(toDir: "${tmpDistsDir}/${destDirName}", preservelastmodified: 'true') {
 
-            if(deployJars.isEmpty()) {
-                exclude '*'
-            }
+        fileset(dir: libsDirectory.getAsFile().get()) {
+            deployJarsArray.each { include(name: it) }
+            if(deployJarsArray.size() == 0) { exclude(name: '*') }
         }
     }
 
+    // デプロイ対象の基盤Jarを配布ディレクトリにコピーする
     if(!project.hasProperty('deployDependencies')) { return }
-
     copy {
         from configurations.runtimeClasspath
         into file("${tmpDistsDir}/lib/dependencies")
         exclude 'base-*', 'biz-*' // 自分のプロジェクトで作成したJarは除外
 
-        deployDependencies.split().each {
-            include it
-        }
-
-        if(deployDependencies.isEmpty()) {
-            exclude '*'
-        }
+        deployDependencies.split().each { include it }
+        if(deployDependencies.isEmpty()) { exclude '*' }
     }
 
 }}
@@ -50,49 +44,44 @@ task preDistBins { doLast {
 
     if(!project.hasProperty('deployBins')) { return }
 
-    copy {
-        from "${serverReleaseDir}/bin"
+    ant.copy(toDir: "${tmpDistsDir}/bin", preservelastmodified: 'true') {
+
+        fileset(dir: "${serverReleaseDir}/bin") {
+            deployBins.split().each { include(name: it) }
+            if(deployBins.isEmpty()) { exclude(name: '*') }
+        }
 
         // 該当のステージング環境のリソースに差替え
-        if(stage.toLowerCase() != 'release') {
-            from "${serverDir}/${stage}/bin"
+        if(stage.toLowerCase() == 'release') { return }
+
+        fileset(dir: "${serverDir}/${stage}/bin") {
+            deployBins.split().each { include(name: it) }
+            if(deployBins.isEmpty()) { exclude(name: '*') }
         }
-
-        deployBins.split().each {
-            include it
-        }
-
-        if(deployBins.isEmpty()) {
-            exclude '*'
-        }
-
-        into "${tmpDistsDir}/bin"
-
     }
+
 }}
 
 task preDistConfs { doLast {
 
     if(!project.hasProperty('deplohConfs')) { return }
 
-    copy {
-        from "${serverReleaseDir}/conf"
+    ant.copy(toDir: "${tmpDistsDir}/conf", preservelastmodified: 'true') {
+
+        fileset(dir: "${serverReleaseDir}/conf") {
+            deplohConfs.split().each { include(name: it) }
+            if(deplohConfs.isEmpty()) { exclude(name: '*') }
+        }
 
         // 該当のステージング環境のリソースに差替え
-        if(stage.toLowerCase() != 'release') {
-            from "${serverDir}/${stage}/conf"
-        }
+        if(stage.toLowerCase() == 'release') { return }
 
-        deplohConfs.split().each {
-            include it
+        fileset(dir: "${serverDir}/${stage}/conf") {
+            deplohConfs.split().each { include(name: it) }
+            if(deplohConfs.isEmpty()) { exclude(name: '*') }
         }
-
-        if(deplohConfs.isEmpty()) {
-            exclude '*'
-        }
-
-        into "${tmpDistsDir}/conf"
     }
+
 }}
 
 task preDist {
