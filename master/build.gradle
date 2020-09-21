@@ -1,5 +1,3 @@
-import java.time.format.DateTimeFormatter;
-
 apply plugin: 'distribution'
 apply plugin: 'at.bxm.svntools'
 
@@ -53,13 +51,14 @@ wrapper {
     gradleVersion = '6.3'
 }
 
-task svnTag(type: at.bxm.gradleplugins.svntools.tasks.SvnTag) {
+task commitArchives(type: at.bxm.gradleplugins.svntools.tasks.SvnCommit) {
 
-    def now = LocalDateTime.now();
-    def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
-    tagName = "${formatter.format(now)}_${project.name}"
+    subprojects.each { subproject ->
+        source << subproject.buildDirectory.getAsFile().get()
+    }
 
-    commitMessage = "${project.name}のタグを作成"
+    recursive = true
+    commitMessage = 'ビルド結果をコミット'
 }
 
 task preDistAllWeb { doLast {
@@ -86,7 +85,6 @@ task preDistAll { doLast {
             fileset(dir: subproject.tmpDistsDir)
         }
     }
-
 }}
 
 distributions {
