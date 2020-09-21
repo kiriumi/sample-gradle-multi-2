@@ -57,9 +57,9 @@ task svnTag(type: at.bxm.gradleplugins.svntools.tasks.SvnTag) {
 
     def now = LocalDateTime.now();
     def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
-    tagName = "${formatter.format(now)}_${deployProjectName}"
+    tagName = "${formatter.format(now)}_${project.name}"
 
-    commitMessage = "${project.name}-${formatter.format(now)}"
+    commitMessage = "${project.name}のタグを作成"
 }
 
 task preDistAllWeb { doLast {
@@ -92,10 +92,7 @@ task preDistAll { doLast {
 distributions {
 
     main {
-        def now = LocalDateTime.now();
-        def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
-
-        distributionBaseName = "${project.name}-${formatter.format(now)}"
+        distributionBaseName = deployRootDir
 
         contents {
             from tmpDistsDir
