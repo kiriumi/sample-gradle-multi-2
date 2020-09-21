@@ -42,7 +42,7 @@ task preDistDependencies { doLast {
 
 task preDistBins { doLast {
 
-    if(!project.hasProperty('deployBins')) { return }
+    if(plugins.hasPlugin('war')) { return }
 
     ant.copy(toDir: "${tmpDistsDir}/bin", preservelastmodified: 'true') {
 
@@ -64,21 +64,19 @@ task preDistBins { doLast {
 
 task preDistConfs { doLast {
 
-    if(!project.hasProperty('deplohConfs')) { return }
-
     ant.copy(toDir: "${tmpDistsDir}/conf", preservelastmodified: 'true') {
 
         fileset(dir: "${serverReleaseDir}/conf") {
-            deplohConfs.split().each { include(name: it) }
-            if(deplohConfs.isEmpty()) { exclude(name: '*') }
+            deployConfs.split().each { include(name: it) }
+            if(deployConfs.isEmpty()) { exclude(name: '*') }
         }
 
         // 該当のステージング環境のリソースに差替え
         if(stage.toLowerCase() == 'release') { return }
 
         fileset(dir: "${serverDir}/${stage}/conf") {
-            deplohConfs.split().each { include(name: it) }
-            if(deplohConfs.isEmpty()) { exclude(name: '*') }
+            deployConfs.split().each { include(name: it) }
+            if(deployConfs.isEmpty()) { exclude(name: '*') }
         }
     }
 
