@@ -1,13 +1,6 @@
 apply plugin: 'org.hidetake.ssh'
 
 ext {
-
-    // 配布リソース情報
-    distFilename = String.format("${deployRootDir}-%s.zip", new Date().format('yyyyMMdd'))
-
-    // デプロイ対象リソースの指定がない場合のダミーファイル名
-    none = ['71f8e7976e4cbc4561c9d62fb283e7f788202acb'] // 「none」をsha1でハッシュ化した値
-
     // 削除対象リソース
     removeBins = toArray(deleteBins)
     removeConfs = toArray(deleteConfs)
@@ -16,6 +9,8 @@ ext {
 }
 
 def toArray(targets) {
+    // デプロイ対象リソースの指定がない場合のダミーファイル名
+    def none = ['71f8e7976e4cbc4561c9d62fb283e7f788202acb'] // 「none」をsha1でハッシュ化した値
     return targets.trim().isEmpty() ? none : targets.split()
 }
 
@@ -60,8 +55,19 @@ task deployResources(dependsOn: removeResources]) doLast {
     ssh.run {
         session(remotes.deployer)  {
 
+            def deployWorkDir = '/work' // デプロイワークディレクトリ
+
+            // ワークディレクトリのクリーン
+            execute("rm -rf ${deployWorkDir}")
+
+            // 配布zipをサーバに転送
+            put from: "${distsDir}/${deployRootDir}.zip", into: deployWorkDir
+
+            // 配布zipを解凍
+            execute("unzip ${deployWorkDir}/${deployRootDir}.zip")
+
             // デプロイ
-            put from: "${distsDir}/${deployRootDir}", into: deployRootDir
+            execute("cp -afr ${deployWorkDir}/${deployRootDir} ${deployRootDir}")
 
             // 権限変更
             def resourceOwner = remotes.deployer.user
@@ -69,6 +75,7 @@ task deployResources(dependsOn: removeResources]) doLast {
                 execute("find ${deployRootDir}/${targetDir} -type f -user ${resourceOwner} | xargs chmod ${mode}")
             }
 
+            // リソースの権限変更
             changeMode(binDir, modeBin)
             changeMode(confDir, modeConf)
             changeMode(libDir, modeLib)
@@ -76,7 +83,8 @@ task deployResources(dependsOn: removeResources]) doLast {
 
             // ディレクトリの権限変更
             execute("find ${deployRootDir}/${binDir} ${deployRootDir}/${confDir} ${deployRootDir}/${libDir} -type d -user ${resourceOwner} | xargs chmod ${modeDir}")
-        }}
+        }
+    }
 }
 
 task diffResources(dependsOn: deployResources) doLast {
