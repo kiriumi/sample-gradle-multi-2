@@ -16,8 +16,8 @@ eclipse.wtp {
 
 cargo {
 
-    containerId = cargoContainerId
-    port = Integer.parseInt(cargoPort)
+    containerId = webContainerId
+    port = Integer.parseInt(webPort)
 
     deployable {
         context = contextPath
@@ -26,17 +26,17 @@ cargo {
     local {
         // 開始タスク：clean cargoStartLocal
         // 終了タスク：cargoStopLocal
-        homeDir = file(cargoLocalApServerHome)
+        homeDir = file(webLocalApServerHome)
         startStopTimeout = 60000
     }
 
     remote {
-        if(project.hasProperty('cargoHostName') && project.hasProperty('cargoHostUser') && project.hasProperty('cargoHostPassword')) {
+        if(project.hasProperty('webHostName') && project.hasProperty('webHostUser') && project.hasProperty('webHostPassword')) {
 
             // タスク：clean cargoRedeployRemote
-            hostname = cargoHostName
-            username = cargoHostUser
-            password = cargoHostPassword
+            hostname = webHostName
+            username = webHostUser
+            password = webHostPassword
         }
     }
 
