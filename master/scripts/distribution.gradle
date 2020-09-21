@@ -1,5 +1,3 @@
-import java.time.format.DateTimeFormatter;
-
 apply plugin: 'distribution'
 //apply plugin: 'java-library-distribution'
 
@@ -89,10 +87,9 @@ task preDist {
 distributions {
 
     main {
-        def now = LocalDateTime.now();
-        def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
-
-        distributionBaseName = "${project.name}-${formatter.format(now)}"
+        // ファイル名は、デプロイ先のルートディレクトリ名に合わせる
+        // ∵サーバに転送後のリネームの手間を省くため
+        distributionBaseName = deployRootDir
 
         contents {
             from tmpDistsDir
