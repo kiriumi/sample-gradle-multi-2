@@ -1,0 +1,90 @@
+apply plugin: 'org.hidetake.ssh'
+
+ext {
+
+    // 配布リソース情報
+    distFilename = String.format("${deployRootDir}-%s.zip", new Date().format('yyyyMMdd'))
+
+    // デプロイ対象リソースの指定がない場合のダミーファイル名
+    none = ['71f8e7976e4cbc4561c9d62fb283e7f788202acb'] // 「none」をsha1でハッシュ化した値
+
+    // 削除対象リソース
+    removeBins = toArray(deleteBins)
+    removeConfs = toArray(deleteConfs)
+    removeLibs = toArray(deleteLibs)
+    removeDependencies = toArray(deleteDependencies)
+}
+
+def toArray(targets) {
+    return targets.trim().isEmpty() ? none : targets.split()
+}
+
+ssh.settings { knownHosts = allowAnyHosts }
+
+remotes {
+    deployer {
+        host = deployHost
+        user = deployUser
+        password = deployPassword
+    }
+}
+
+task backupResources doLast {
+
+    ssh.run {
+        session(remotes.deployer)  {
+            execute("cp -afr ${deployRootDir} ${deployBackupDir}")
+        }
+    }
+}
+
+task removeResources(dependsOn: backupResources) doLast {
+
+    ssh.run {
+        session(remotes.deployer)  {
+
+            def remove = { targetDir, targets ->
+                targets.each{ execute("rm -f ${deployRootDir}/${targetDir}/${it}") }
+            }
+
+            remove(binDir, removeBins)
+            remove(confDir, removeConfs)
+            remove(libDir, removeLibs)
+            remove(dependenciesDir, removeDependencies)
+        }
+    }
+}
+
+task deployResources(dependsOn: removeResources]) doLast {
+
+    ssh.run {
+        session(remotes.deployer)  {
+
+            // デプロイ
+            put from: "${distsDir}/${deployRootDir}", into: deployRootDir
+
+            // 権限変更
+            def resourceOwner = remotes.deployer.user
+            def changeMode = { targetDir, mode ->
+                execute("find ${deployRootDir}/${targetDir} -type f -user ${resourceOwner} | xargs chmod ${mode}")
+            }
+
+            changeMode(binDir, modeBin)
+            changeMode(confDir, modeConf)
+            changeMode(libDir, modeLib)
+            changeMode(dependenciesDir, modeLib)
+
+            // ディレクトリの権限変更
+            execute("find ${deployRootDir}/${binDir} ${deployRootDir}/${confDir} ${deployRootDir}/${libDir} -type d -user ${resourceOwner} | xargs chmod ${modeDir}")
+        }}
+}
+
+task diffResources(dependsOn: deployResources) doLast {
+
+    ssh.run {
+        session(remotes.deployer)  {
+            execute("diff -r ${deployRootDir} ${deployBackupDir}")
+        }}
+}
+
+task deploy(dependsOn: diffResources)
