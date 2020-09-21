@@ -1,7 +1,5 @@
 apply from: '../master/scripts/publish.gradle'
 
-version = '1.0.0-SNAPSHOT'
-
 dependencies {
 
     api projectIfPresent(':base-domain')

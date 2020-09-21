@@ -1,8 +1,6 @@
 apply from: '../master/scripts/war.gradle'
 apply from: '../master/scripts/publish-war.gradle'
 
-version = '1.0.0-SNAPSHOT'
-
 dependencies {
 
     api projectIfPresent(':base-domain')

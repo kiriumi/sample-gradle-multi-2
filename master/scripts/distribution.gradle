@@ -12,8 +12,8 @@ task preDistArchives { doLast {
     // 公開Jar（Web）はWebアプリケーションに入るため、配布物から除外する
     if(plugins.hasPlugin('war') && plugins.hasPlugin('maven-publish')) { return }
 
-    // 公開JarまたはWarの場合、アーカイブ名名を取得する
-    def deployJarsArray = (plugins.hasPlugin('maven-publish') || plugins.hasPlugin('war')) ? [ "${project.archivesBaseName}*.*" ] : deployJars.split()
+    // 公開JarまたはWarの場合、アーカイブ名を取得する
+    def deployJarsArray = (plugins.hasPlugin('maven-publish') || plugins.hasPlugin('war')) ? [ "${project.archivesBaseName}*" ] : deployJars.split()
 
     // Warの場合は、配置先ディレクトリ名をlibではなくwebにする
     def destDirName = plugins.hasPlugin('war') ? 'web' : 'lib'

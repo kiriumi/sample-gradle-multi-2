@@ -1,7 +1,5 @@
 apply from: '../master/scripts/publish.gradle'
 
-version = '1.0.0-SNAPSHOT'
-
 dependencies {
 
     api group: 'org.mybatis', name: 'mybatis', version: '3.5.5'

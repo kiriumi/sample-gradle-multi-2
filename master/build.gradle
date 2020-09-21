@@ -17,6 +17,10 @@ allprojects {
 
 subprojects {
 
+    // UTのみバージョン指定をするので、SNAPSHOTを付ける
+    // CT以降は付けないので、付けないままにする
+    version = version == 'unspecified' ? version : version + '-SNAPSHOT'
+
     repositories {
         maven { url "https://repository.primefaces.org/" }
     }
