@@ -2,7 +2,6 @@
 #  General
 ################
 *.log
-*.zip
 *.tar
 *.gz
 *.rar
