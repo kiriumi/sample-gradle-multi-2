@@ -11,7 +11,7 @@ dependencies {
 }
 
 eclipse.wtp {
-    component { contextPath  = contextPath }
+    component { contextPath  = webContextPath }
 }
 
 cargo {
@@ -20,7 +20,7 @@ cargo {
     port = Integer.parseInt(webPort)
 
     deployable {
-        context = contextPath
+        context = webContextPath
     }
 
     local {
@@ -33,11 +33,20 @@ cargo {
     remote {
         if(project.hasProperty('webHostName') && project.hasProperty('webHostUser') && project.hasProperty('webHostPassword')) {
 
-            // タスク：clean cargoRedeployRemote
+            // タスク：cargoRedeployRemote
             hostname = webHostName
             username = webHostUser
             password = webHostPassword
         }
     }
 
+}
+
+// Warを作成せず、Warのデプロイのみするためのタスク
+task deployWeb(dependsOn: cargoRedeployRemote)
+
+gradle.taskGraph.whenReady { graph ->
+    if (graph.hasTask(deployWeb)) {
+        tasks.findByName('war').enabled(false)
+    }
 }
