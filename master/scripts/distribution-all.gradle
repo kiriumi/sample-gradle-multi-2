@@ -1,0 +1,45 @@
+apply plugin: 'distribution'
+
+task preDistAllWeb { doLast {
+
+    subprojects.each { subproject ->
+
+        //Webアプリケーションのリソースが対象
+        if(subproject.plugins.hasPlugin('war')) {
+
+            ant.copy(toDir: rootProject.tmpDistsDir,  preservelastmodified: 'true') {
+                fileset(dir: subproject.tmpDistsDir)
+            }
+        }
+    }
+}}
+
+task preDistAllBatch { doLast {
+
+    subprojects.each { subproject ->
+
+        //Webアプリケーションのリソースは対象外
+        if(subproject.plugins.hasPlugin('war')) { return } // クロージャ内だとreturnがcontinueと同一
+
+        ant.copy(toDir: rootProject.tmpDistsDir,  preservelastmodified: 'true') {
+            fileset(dir: subproject.tmpDistsDir)
+        }
+    }
+}}
+
+task distZipAllWeb(dependsOn: [preDistAllWeb, distZip])
+distZip.mustRunAfter preDistAllWeb
+
+task distZipAllBatch(dependsOn: [preDistAllBatch, distZip])
+distZip.mustRunAfter preDistAllBatch
+
+distributions {
+
+    main {
+        distributionBaseName = deployRootDir
+
+        contents {
+            from tmpDistsDir
+        }
+    }
+}

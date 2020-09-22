@@ -1,4 +1,3 @@
-apply plugin: 'distribution'
 apply plugin: 'at.bxm.svntools'
 
 allprojects {
@@ -51,6 +50,16 @@ wrapper {
     gradleVersion = '6.3'
 }
 
+def projectIfPresent(String projectPath) {
+
+    if(findProject(projectPath)) {
+        return project(projectPath)
+    }
+
+    def projectName = projectPath.substring(1)
+    return "${group}:${projectName}:latest.integration"
+}
+
 task commitArchives(type: at.bxm.gradleplugins.svntools.tasks.SvnCommit) {
 
     subprojects.each { subproject ->
@@ -61,52 +70,4 @@ task commitArchives(type: at.bxm.gradleplugins.svntools.tasks.SvnCommit) {
     commitMessage = 'ビルド結果をコミット'
 }
 
-task preDistAllWeb { doLast {
-
-    subprojects.each { subproject ->
-
-        //Webアプリケーションのリソースが対象
-        if(subproject.plugins.hasPlugin('war')) {
-
-            ant.copy(toDir: rootProject.tmpDistsDir,  preservelastmodified: 'true') {
-                fileset(dir: subproject.tmpDistsDir)
-            }
-        }
-    }
-}}
-
-task preDistAllBatch { doLast {
-
-    subprojects.each { subproject ->
-
-        //Webアプリケーションのリソースは対象外
-        if(subproject.plugins.hasPlugin('war')) { return } // クロージャ内だとreturnがcontinueと同一
-
-        ant.copy(toDir: rootProject.tmpDistsDir,  preservelastmodified: 'true') {
-            fileset(dir: subproject.tmpDistsDir)
-        }
-    }
-}}
-
-distributions {
-
-    main {
-        distributionBaseName = deployRootDir
-
-        contents {
-            from tmpDistsDir
-        }
-    }
-}
-
-task distZipAll(dependsOn: distZip)
-
-def projectIfPresent(String projectPath) {
-
-    if(findProject(projectPath)) {
-        return project(projectPath)
-    }
-
-    def projectName = projectPath.substring(1)
-    return "${group}:${projectName}:latest.integration"
-}
+apply from: 'scripts/distribution-all.gradle' // ext.tmpDistsDir を読み込むため、それより後の場所に記載
