@@ -65,7 +65,7 @@ task preDistAllWeb { doLast {
 
     subprojects.each { subproject ->
 
-        //Webアプリケーションのリソースは対象外
+        //Webアプリケーションのリソースが対象
         if(subproject.plugins.hasPlugin('war')) {
 
             ant.copy(toDir: rootProject.tmpDistsDir,  preservelastmodified: 'true') {
@@ -75,10 +75,11 @@ task preDistAllWeb { doLast {
     }
 }}
 
-task preDistAll { doLast {
+task preDistAllBatch { doLast {
 
     subprojects.each { subproject ->
 
+        //Webアプリケーションのリソースは対象外
         if(subproject.plugins.hasPlugin('war')) { return } // クロージャ内だとreturnがcontinueと同一
 
         ant.copy(toDir: rootProject.tmpDistsDir,  preservelastmodified: 'true') {
@@ -97,6 +98,8 @@ distributions {
         }
     }
 }
+
+task distZipAll(dependsOn: distZip)
 
 def projectIfPresent(String projectPath) {
 

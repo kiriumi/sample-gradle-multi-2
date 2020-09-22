@@ -3,6 +3,9 @@ apply plugin: 'distribution'
 
 task preDistArchives { doLast {
 
+    // アーカイブを作成していない場合は、何もしない
+    if( !libsDirectory.getAsFile().get().exists() ) { return }
+
     // 公開Jar（Web）はWebアプリケーションに入るため、配布物から除外する
     if(plugins.hasPlugin('war') && plugins.hasPlugin('maven-publish')) { return }
 
@@ -25,8 +28,10 @@ task preDistArchives { doLast {
 
 task preDistDependencies { doLast {
 
-    // デプロイ対象の基盤Jarを配布ディレクトリにコピーする
-    if(!project.hasProperty('deployDependencies')) { return }
+    // Warの場合、基盤Jarはサーバにデプロイしないため、除外
+    if(plugins.hasPlugin('war')) { return }
+
+    // 基盤Jarを配布ディレクトリにコピーする
     copy {
         from configurations.runtimeClasspath
         into file("${tmpDistsDir}/lib/dependencies")

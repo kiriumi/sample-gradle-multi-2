@@ -1,0 +1,18 @@
+cargo {
+
+    remote {
+        // タスク：cargoRedeployRemote
+        hostname = webHostName
+        username = webHostUser
+        password = webHostPassword
+    }
+}
+
+// Warを作成せず、Warのデプロイのみするためのタスク
+task deployWeb(dependsOn: cargoRedeployRemote)
+
+gradle.taskGraph.whenReady { graph ->
+    if (graph.hasTask(deployWeb)) {
+        tasks.findByName('war').enabled(false)
+    }
+}
