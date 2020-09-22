@@ -40,8 +40,6 @@ task preDistDependencies { doLast {
 
 task preDistBins { doLast {
 
-    if(plugins.hasPlugin('war')) { return }
-
     ant.copy(toDir: "${tmpDistsDir}/bin", preservelastmodified: 'true') {
 
         fileset(dir: "${serverReleaseDir}/bin") {
