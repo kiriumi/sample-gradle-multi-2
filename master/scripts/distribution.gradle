@@ -16,7 +16,7 @@ task preDistArchives { doLast {
     def destDirName = plugins.hasPlugin('war') ? 'web' : 'lib'
 
     // デプロイ対象のアーカイブを配布ディレクトリにコピーする
-    ant.copy(toDir: "${tmpDistsDir}/${destDirName}", preservelastmodified: 'true') {
+    ant.copy(toDir: "${preDistsDir}/${destDirName}", preservelastmodified: 'true') {
 
         fileset(dir: libsDirectory.getAsFile().get()) {
             deployJarsArray.each { include(name: it) }
@@ -34,7 +34,7 @@ task preDistDependencies { doLast {
     // 基盤Jarを配布ディレクトリにコピーする
     copy {
         from configurations.runtimeClasspath
-        into file("${tmpDistsDir}/lib/dependencies")
+        into file("${preDistsDir}/lib/dependencies")
         exclude 'base-*', 'biz-*' // 自分のプロジェクトで作成したJarは除外
 
         deployDependencies.split().each { include it }
@@ -45,7 +45,7 @@ task preDistDependencies { doLast {
 
 task preDistBins { doLast {
 
-    ant.copy(toDir: "${tmpDistsDir}/bin", preservelastmodified: 'true') {
+    ant.copy(toDir: "${preDistsDir}/bin", preservelastmodified: 'true') {
 
         fileset(dir: "${serverReleaseDir}/bin") {
             deployBins.split().each { include(name: it) }
@@ -65,7 +65,7 @@ task preDistBins { doLast {
 
 task preDistConfs { doLast {
 
-    ant.copy(toDir: "${tmpDistsDir}/conf", preservelastmodified: 'true') {
+    ant.copy(toDir: "${preDistsDir}/conf", preservelastmodified: 'true') {
 
         fileset(dir: "${serverReleaseDir}/conf") {
             deployConfs.split().each { include(name: it) }
@@ -95,7 +95,7 @@ distributions {
         distributionBaseName = deployRootDir
 
         contents {
-            from tmpDistsDir
+            from preDistsDir
         }
     }
 }

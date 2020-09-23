@@ -6,7 +6,7 @@ allprojects {
 
     group = 'sample.gradle.multi'
 
-    ext.tmpDistsDir = buildDirectory.dir('tmpDistributions').get()
+    ext.preDistsDir = buildDirectory.dir('preDistributions').get()
 
     repositories {
         mavenCentral()
@@ -68,5 +68,5 @@ task commitArchives(type: at.bxm.gradleplugins.svntools.tasks.SvnCommit) {
     commitMessage = 'ビルド結果をコミット'
 }
 
-apply from: 'scripts/distribution-all.gradle' // ext.tmpDistsDir を読込む必要があるため、それより後に記述
+apply from: 'scripts/distribution-all.gradle' // ext.preDistsDir を読込む必要があるため、それより後に記述
 
