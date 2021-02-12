@@ -11,7 +11,10 @@ dependencies {
 }
 
 eclipse.wtp {
-    component { contextPath  = webContextPath }
+    component {
+        contextPath  = webContextPath
+        deployName = webContextPath
+    }
 }
 
 cargo {
