@@ -37,10 +37,10 @@ subprojects {
 
     sourceSets {
         server.resources {
-            srcDirs = [
-                file("${serverReleaseDir}/conf")
-            ]
+            srcDirs += file("${serverReleaseDir}/conf")
         }
+
+        test.runtimeClasspath += server.output
     }
 }
 
