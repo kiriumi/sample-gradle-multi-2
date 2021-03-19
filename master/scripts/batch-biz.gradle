@@ -15,7 +15,6 @@ sourceSets {
     common {
         def srcDirCommon = 'src/common'
         java { srcDir "${srcDirCommon}/java" }
-        resources { srcDir "${srcDirCommon}/resources" }
     }
 
     test {
