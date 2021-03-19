@@ -7,3 +7,23 @@ eclipse.wtp {
         deployName = webContextPath
     }
 }
+
+// ドライバやスタブ、モックのJava, WebリソースをEclipseからAPサーバにデプロイし、かつWarにした時には除外するため
+def srcDirTestWeb = 'src/testweb'
+
+sourceSets {
+    main.java {
+        srcDirs += "${srcDirTestWeb}/java"
+    }
+}
+
+compileJava {
+    source -= fileTree(srcDirTestWeb)
+}
+
+eclipse.wtp {
+
+    component {
+        resource sourcePath: "${srcDirTestWeb}/webapp".toString(), deployPath: '/'
+    }
+}
