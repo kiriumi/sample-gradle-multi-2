@@ -5,5 +5,5 @@ flyway {
     user = dbUser
     password = dbPassword
     schemas = dbSchemas.split()
-    locations = [ "filesystem:${projectDir}/src/main/db/migration" ] // デフォルトはsrc/main/db/migration
+    locations = [ "filesystem:${projectDir}/src/db/migration" ] // デフォルトはsrc/main/db/migration
 }

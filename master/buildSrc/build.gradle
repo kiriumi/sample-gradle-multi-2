@@ -5,7 +5,8 @@ repositories {
 dependencies {
 
     // UTで使用するプラグイン
-    implementation "gradle.plugin.org.flywaydb:gradle-plugin-publishing:7.0.0-beta1"
+    implementation "gradle.plugin.org.flywaydb:gradle-plugin-publishing:7.0.4"
+
     implementation "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.5.0"
 
     // CT以降で使用するプラグイン

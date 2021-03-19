@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS sample1 (
+    id INT PRIMARY KEY,
+    name TEXT
+)
