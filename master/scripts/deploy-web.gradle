@@ -1,4 +1,20 @@
+apply plugin: 'com.bmuschko.cargo'
+
+dependencies {
+
+    def cargoVersion = '1.7.10'
+    cargo "org.codehaus.cargo:cargo-core-uberjar:${cargoVersion}",
+          "org.codehaus.cargo:cargo-ant:${cargoVersion}"
+}
+
 cargo {
+
+    local {
+        // 開始タスク：clean cargoStartLocal
+        // 終了タスク：cargoStopLocal
+        homeDir = file(webLocalApServerHome)
+        startStopTimeout = 60000
+    }
 
     remote {
         // タスク：cargoRedeployRemote
@@ -6,9 +22,16 @@ cargo {
         username = webHostUser
         password = webHostPassword
     }
+
+    containerId = webContainerId
+    port = Integer.parseInt(webPort)
+
+    deployable {
+        context = webContextPath
+    }
 }
 
-// Warを作成せず、Warのデプロイのみするためのタスク
+// 過去にビルドして作成したWarをデプロイするため、Warを作成させずにデプロイのみ行うタスク
 task deployWeb(dependsOn: cargoRedeployRemote)
 
 gradle.taskGraph.whenReady { graph ->
