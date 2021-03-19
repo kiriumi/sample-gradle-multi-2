@@ -9,15 +9,13 @@ java {
 
 publishing {
 
+    repositories {
+        maven { url = file(inhouseMavenRepoPath) }
+    }
+
     publications {
         mavenJava(MavenPublication) {
             from components.java
-        }
-    }
-
-    repositories {
-        maven {
-            url = inhouseMavenRepoUrl
         }
     }
 }
@@ -27,3 +25,30 @@ javadoc {
         options.addBooleanOption('html5', true)
     }
 }
+
+/*
+//Gradle 4.7の頃の方法
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+publishing {
+
+    repositories {
+        maven { url = file(inhouseMavenRepoPath) }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifacts = [ jar, sourceJar, javadocJar ]
+        }
+    }
+}
+*/
