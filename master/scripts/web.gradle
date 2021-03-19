@@ -8,6 +8,16 @@ eclipse.wtp {
     }
 }
 
+dependencies {
+
+    compileOnly group: 'javax', name: 'javaee-web-api', version: '8.0.1'
+
+    implementation group: 'org.primefaces', name: 'primefaces', version: '8.0'
+    implementation group: 'org.primefaces.themes', name: 'all-themes', version: '1.0.10'
+
+    testImplementation group: 'com.codeborne', name: 'selenide', version: '5.11.1'
+}
+
 // ドライバやスタブ、モックのJava, WebリソースをEclipseからAPサーバにデプロイし、かつWarにした時には除外するため
 def srcDirTestWeb = 'src/testweb'
 

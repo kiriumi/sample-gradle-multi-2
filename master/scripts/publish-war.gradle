@@ -1,8 +1,0 @@
-//apply plugin: 'war' // eclipseからwarの状態でAPサーバにデプロイされるのを防ぐため、publish-warのプロジェクト以外が参照する際はコメントアウト
-apply from: '../master/scripts/publish.gradle'
-
-jar {
-    into('META-INF/resources') {
-        from webAppDir
-    }
-}

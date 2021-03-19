@@ -1,0 +1,81 @@
+apply from: '../master/scripts/batch.gradle'
+
+version = tagName
+
+ext {
+    def javaSrcDir = sourceSets.main.java.srcDirs[0]
+    def groupPackageDir = group.replaceAll('\\.', '/')
+    def baseAppPackageDir = file("${javaSrcDir}/${groupPackageDir}/${subSystemId}/batch")
+    def appDirs = baseAppPackageDir.listFiles().findAll{ it.isDirectory() }
+    archiveNames = appDirs.collect{ it.name }
+}
+
+sourceSets {
+
+    common {
+        def srcDirCommon = 'src/common'
+        java { srcDir "${srcDirCommon}/java" }
+        resources { srcDir "${srcDirCommon}/resources" }
+    }
+
+    test {
+        runtimeClasspath += common.output // JUnitでcommonのリソースをテストできるようにするため
+    }
+}
+
+// バッチの中の共通モジュールのみを１つのJarとするため
+compileJava {
+    source += sourceSets.common.java
+}
+
+task compileJavaCommon(type: JavaCompile) {
+    classpath = sourceSets.main.compileClasspath
+    source = sourceSets.common.java
+    destinationDirectory = sourceSets.common.output.classesDirs.getSingleFile()
+}
+
+task processResourcesCommon(type: Copy) {
+    from sourceSets.common.resources
+    into sourceSets.common.output.resourcesDir
+    includeEmptyDirs false
+}
+
+task jarCommon(type: Jar) {
+
+    dependsOn compileJavaCommon, processResourcesCommon
+
+    baseName = jar.baseName + '-common'
+    from tasks.compileJavaCommon.destinationDir, tasks.processResourcesCommon.destinationDir
+    includeEmptyDirs false
+}
+
+archiveNames.each { archiveName ->
+
+    archiveName = archiveName.trim()
+
+    task "jar${archiveName}"(type: Jar) {
+
+        archiveBaseName = archiveName
+        from tasks.compileJava.destinationDir, tasks.processResources.destinationDir
+        include "**/${archiveName}/**/*"
+        includeEmptyDirs false
+    }
+}
+
+task jarAll {
+
+    dependsOn jarCommon
+
+    archiveNames.each { archiveName ->
+        dependsOn "jar${archiveName.trim()}"
+    }
+}
+
+jar {
+    jar.dependsOn jarAll
+
+    doLast {
+        // デフォルトで作成されるJarを削除
+        archiveFile.getAsFile().get().delete()
+    }
+}

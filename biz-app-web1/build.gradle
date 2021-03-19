@@ -1,5 +1,5 @@
-apply from: '../master/scripts/war.gradle'
-apply from: '../master/scripts/deploy-web.gradle'
+apply from: '../master/scripts/web.gradle'
+apply from: '../master/scripts/deploy-war.gradle'
 
 dependencies {
     implementation projectIfPresent(':base-web')

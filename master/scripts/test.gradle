@@ -4,14 +4,9 @@ apply plugin: 'pmd'
 apply plugin: 'jacoco'
 
 dependencies {
-
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
     testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
-
-    if(project.plugins.hasPlugin('war')) {
-        testImplementation group: 'com.codeborne', name: 'selenide', version: '5.11.1'
-    }
 }
 
 test {
@@ -20,17 +15,18 @@ test {
 
 checkstyle {
     toolVersion = '8.36' // Gradleラッパーの場合、バージョン指定がないとエラーになる
-    configFile = file("../master/checkstyle/google_checks.xml")
-    sourceSets = [ sourceSets.main ]
+    configFile = file("../master/checkstyle/${chechstyleConfigeFilename}")
+    checkstyleTest.enabled = false
     ignoreFailures = true
 }
 
 spotbugs {
+    spotbugsTest.enabled = false
     ignoreFailures = true
 }
 
 pmd {
-    sourceSets = [ sourceSets.main ]
+    pmdTest.enabled = false
     ignoreFailures = true
 }
 

@@ -1,5 +1,7 @@
 apply plugin: 'com.bmuschko.cargo'
 
+version = tagName
+
 dependencies {
 
     def cargoVersion = '1.7.10'

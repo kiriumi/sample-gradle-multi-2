@@ -1,5 +1,7 @@
 apply plugin: 'org.hidetake.ssh'
 
+version = tagName
+
 ext {
     // 削除対象リソース
     removeBins = toArray(deleteBins)

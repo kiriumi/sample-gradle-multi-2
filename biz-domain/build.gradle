@@ -1,6 +1,6 @@
-apply from: '../master/scripts/publish.gradle'
+apply from: '../master/scripts/library.gradle'
+apply from: '../master/scripts/db-migration.gradle'
 
 dependencies {
-
     api projectIfPresent(':base-domain')
 }

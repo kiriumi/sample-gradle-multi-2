@@ -1,13 +1,5 @@
-apply from: '../master/scripts/war.gradle'
-apply from: '../master/scripts/publish-war.gradle'
+apply from: '../master/scripts/library-web.gradle'
 
 dependencies {
-
     api projectIfPresent(':base-domain')
-
-    providedCompile group: 'javax', name: 'javaee-web-api', version: '8.0.1'
-
-    // フレームワーク
-    api group: 'org.primefaces', name: 'primefaces', version: '8.0'
-    api group: 'org.primefaces.themes', name: 'all-themes', version: '1.0.10'
 }

@@ -11,6 +11,7 @@ allprojects {
     repositories {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://repository.primefaces.org/" }
         mavenLocal()
     }
 }
@@ -20,15 +21,6 @@ subprojects {
     apply from: '../master/scripts/java.gradle'
     apply from: '../master/scripts/test.gradle'
     apply from: '../master/scripts/distribution.gradle'
-    apply from: '../master/scripts/db-migration.gradle'
-
-    // UTのみバージョン指定をするので、SNAPSHOTを付ける
-    // CT以降は付けないので、そのままにする
-    version = version == 'unspecified' ? version : version + '-SNAPSHOT'
-
-    repositories {
-        maven { url "https://repository.primefaces.org/" }
-    }
 
     ext {
         serverDir = file('src/server')
@@ -69,4 +61,3 @@ task commitArchives(type: at.bxm.gradleplugins.svntools.tasks.SvnCommit) {
 }
 
 apply from: 'scripts/distribution-all.gradle' // ext.preDistsDir を読込む必要があるため、それより後に記述
-

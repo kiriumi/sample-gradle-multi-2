@@ -1,0 +1,7 @@
+apply plugin: 'java'
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: '2.3.9.RELEASE'
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.2.13.RELEASE'
+    testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.2.5.RELEASE'
+}

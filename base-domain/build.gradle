@@ -1,13 +1,2 @@
-apply from: '../master/scripts/publish.gradle'
-
-dependencies {
-
-    api group: 'org.mybatis', name: 'mybatis', version: '3.5.5'
-
-    // ログ
-    api group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
-    api group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.30'
-    api group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.1'
-    api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.1'
-}
-
+apply from: '../master/scripts/library.gradle'
+apply from: '../master/scripts/db-migration.gradle'

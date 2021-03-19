@@ -1,0 +1,18 @@
+apply from: '../master/scripts/library.gradle'
+
+jar {
+    into('META-INF/resources') {
+        from 'src/main/webapp'
+    }
+}
+
+artifacts.archives jar
+configurations.archives.artifacts.with { archives ->
+
+    // アーティファクトからWarを除外
+    def warArtifact
+    archives.each {
+        if (it.file =~ 'war') { warArtifact = it }
+    }
+    remove warArtifact
+}
