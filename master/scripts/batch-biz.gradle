@@ -13,8 +13,7 @@ ext {
 sourceSets {
 
     common {
-        def srcDirCommon = 'src/common'
-        java { srcDir "${srcDirCommon}/java" }
+        java { srcDir "src/common/java" }
     }
 
     test {
