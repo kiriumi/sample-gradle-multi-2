@@ -15,7 +15,7 @@ test {
 
 checkstyle {
     toolVersion = '8.36' // Gradleラッパーの場合、バージョン指定がないとエラーになる
-    configFile = file("../master/checkstyle/${chechstyleConfigeFilename}")
+    configFile = file("../master/checkstyle/${chechstyleConfigFilename}")
     checkstyleTest.enabled = false
     ignoreFailures = true
 }
@@ -36,5 +36,12 @@ jacoco {
 
 jacocoTestReport {
     dependsOn test // JaCoCoで計測前に、テスト実施が必須であるため
+
+    reports {
+        html.destination file("${buildDir}/jacoco/html")
+    }
 }
 
+check {
+    dependsOn jacocoTestReport
+}
