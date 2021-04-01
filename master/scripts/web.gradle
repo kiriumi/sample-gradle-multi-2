@@ -18,22 +18,18 @@ dependencies {
     testImplementation group: 'com.codeborne', name: 'selenide', version: '5.11.1'
 }
 
-// ドライバやスタブ、モックのJava, WebリソースをEclipseからAPサーバにデプロイし、かつWarにした時には除外するため
+// ドライバやスタブ、モックのJava, WebリソースをEclipseからAPサーバにデプロイし、かつWarにする時には除外するため
 def srcDirTestWeb = 'src/testweb'
 
 sourceSets {
-    main.java {
+
+    testweb.java {
         srcDirs += "${srcDirTestWeb}/java"
     }
-}
 
-compileJava {
-    source -= fileTree(srcDirTestWeb)
-}
-
-eclipse.wtp {
-
-    component {
-        resource sourcePath: "${srcDirTestWeb}/webapp".toString(), deployPath: '/'
+    testweb.resources {
+        srcDirs += "${srcDirTestWeb}/resources"
     }
+
+    runtimeClasspath += testweb.output
 }
