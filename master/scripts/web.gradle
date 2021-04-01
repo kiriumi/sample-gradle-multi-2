@@ -10,7 +10,7 @@ eclipse.wtp {
 
 dependencies {
 
-    compileOnly group: 'javax', name: 'javaee-web-api', version: '8.0.1'
+    providedCompile group: 'javax', name: 'javaee-web-api', version: '8.0.1'
 
     implementation group: 'org.primefaces', name: 'primefaces', version: '8.0'
     implementation group: 'org.primefaces.themes', name: 'all-themes', version: '1.0.10'
