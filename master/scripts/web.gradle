@@ -19,9 +19,10 @@ dependencies {
 }
 
 // ドライバやスタブ、モックのJava, WebリソースをEclipseからAPサーバにデプロイし、かつWarにする時には除外するため
-def srcDirTestWeb = 'src/testweb'
-
 sourceSets {
+
+
+    def srcDirTestWeb = 'src/testweb'
 
     testweb.java {
         srcDirs += "${srcDirTestWeb}/java"
@@ -31,5 +32,7 @@ sourceSets {
         srcDirs += "${srcDirTestWeb}/resources"
     }
 
-    runtimeClasspath += testweb.output
+    main {
+        runtimeClasspath += testweb.output
+    }
 }

@@ -1,3 +1,4 @@
+apply from: '../master/scripts/web.gradle'
 apply from: '../master/scripts/library.gradle'
 
 jar {
