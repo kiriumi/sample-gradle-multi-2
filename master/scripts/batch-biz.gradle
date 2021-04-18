@@ -12,8 +12,14 @@ ext {
 
 sourceSets {
 
+    main {
+        resources { srcDirs += main.java.srcDirs }
+    }
+
     common {
-        java { srcDir "src/common/java" }
+        def srcCommonJava = 'src/common/java'
+        java { srcDir srcCommonJava }
+        resources { srcDir srcCommonJava }
     }
 
     test {
@@ -52,6 +58,8 @@ archiveNames.each { archiveName ->
     archiveName = archiveName.trim()
 
     task "jar${archiveName}"(type: Jar) {
+
+        dependsOn compileJava, processResources
 
         archiveBaseName = archiveName
         from tasks.compileJava.destinationDir, tasks.processResources.destinationDir
