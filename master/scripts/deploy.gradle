@@ -1,100 +1,70 @@
 apply plugin: 'org.hidetake.ssh'
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 version = tagName
 
 ext {
-    // 削除対象リソース
-    removeBins = toArray(deleteBins)
-    removeConfs = toArray(deleteConfs)
-    removeLibs = toArray(deleteLibs)
-    removeDependencies = toArray(deleteDependencies)
-}
+    stage
 
-def toArray(targets) {
-    // デプロイ対象リソースの指定がない場合のダミーファイル名
-    def none = ['71f8e7976e4cbc4561c9d62fb283e7f788202acb'] // 「none」をsha1でハッシュ化した値
-    return targets.trim().isEmpty() ? none : targets.split()
+    deployWorkDir = '/work'
+    deployWorkDistsDir = "${deployWorkDir}/${stage}/dists"
+    deployWorkBackupDir = "${deployWorkDir}/${stage}/backup"
 }
 
 ssh.settings { knownHosts = allowAnyHosts }
 
 remotes {
-    deployer {
-        host = deployHost
-        user = deployUser
-        password = deployPassword
-    }
-}
 
-task backupResources doLast {
+    deployHosts.split.each {
 
-    ssh.run {
-        session(remotes.deployer)  {
-            execute("cp -afr ${deployRootDir} ${deployBackupDir}")
+        def deployHost = it
+        deployHost {
+            host = deployHost
+            user = deployUser
+            password = deployPassword
         }
     }
 }
 
-task removeResources(dependsOn: backupResources) doLast {
+def backupResources = {
+
+    def deployHost = it
 
     ssh.run {
-        session(remotes.deployer)  {
+        session(remotes.deployHost) {
 
-            def remove = { targetDir, targets ->
-                targets.each{ execute("rm -f ${deployRootDir}/${targetDir}/${it}") }
-            }
+            def formatter = DateTimeFormatter.ofPattern('yyyyMMddHHmmss')
+            def now = LocalDateTime.now().format(formatter)
 
-            remove(binDir, removeBins)
-            remove(confDir, removeConfs)
-            remove(libDir, removeLibs)
-            remove(dependenciesDir, removeDependencies)
+            execute "rm -rf ${deployWorkBackupDir}"
+            execute "mkdir -p ${deployWorkBackupDir}"
+            execute "cp -afr
+            execute "rm -rf"
         }
     }
 }
 
-task deployResources(dependsOn: removeResources]) doLast {
+
+def diffResources = {
+
+    def deployHost = it
 
     ssh.run {
-        session(remotes.deployer)  {
-
-            def deployWorkDir = '/work' // デプロイワークディレクトリ
-
-            // ワークディレクトリのクリーン
-            execute("rm -rf ${deployWorkDir}")
-
-            // 配布zipをサーバに転送
-            put from: "${distsDir}/${deployRootDir}.zip", into: deployWorkDir
-
-            // 配布zipを解凍
-            execute("unzip ${deployWorkDir}/${deployRootDir}.zip")
-
-            // デプロイ
-            execute("cp -afr ${deployWorkDir}/${deployRootDir} ${deployRootDir}")
-
-            // 権限変更
-            def resourceOwner = remotes.deployer.user
-            def changeMode = { targetDir, mode ->
-                execute("find ${deployRootDir}/${targetDir} -type f -user ${resourceOwner} | xargs chmod ${mode}")
-            }
-
-            // リソースの権限変更
-            changeMode(binDir, modeBin)
-            changeMode(confDir, modeConf)
-            changeMode(libDir, modeLib)
-            changeMode(dependenciesDir, modeLib)
-
-            // ディレクトリの権限変更
-            execute("find ${deployRootDir}/${binDir} ${deployRootDir}/${confDir} ${deployRootDir}/${libDir} -type d -user ${resourceOwner} | xargs chmod ${modeDir}")
+        session(remotes.deployHost) {
+            execute "diff -rbB /"
+            execute "rm -rf"
         }
     }
 }
 
-task diffResources(dependsOn: deployResources) doLast {
+task deploy doLast {
 
-    ssh.run {
-        session(remotes.deployer)  {
-            execute("diff -r ${deployRootDir} ${deployBackupDir}")
-        }}
+    deployHosts.split.each {
+        backupResources(it)
+        removeResources(it)
+        deployResources(it)
+        diffResources(it)
+    }
 }
-
-task deploy(dependsOn: diffResources)

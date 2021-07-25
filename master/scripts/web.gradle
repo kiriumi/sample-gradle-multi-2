@@ -15,17 +15,19 @@ dependencies {
 def srcDirTestWeb = 'src/testweb'
 sourceSets {
 
-    testweb.java {
-        srcDir "${srcDirTestWeb}/java"
-    }
+    testweb {
+        java {
+            srcDir "${srcDirTestWeb}/java"
+        }
 
-    testweb.resources {
-        srcDir "${srcDirTestWeb}/resources"
+        resources {
+            srcDir "${srcDirTestWeb}/resources"
+        }
     }
+}
 
-    main {
-        runtimeClasspath += testweb.output
-    }
+compileJava {
+    source -= fileTree(srcDirTestWeb)
 }
 
 eclipse.wtp {
@@ -33,7 +35,7 @@ eclipse.wtp {
         contextPath  = webContextPath
         deployName = webContextPath
 
-        resource sourcePath: "${srcDirTestWeb}/resources".toString(), deployPath: 'WEB-INF/classes'
-        resource sourcePath: "${srcDirTestWeb}/webapp".toString(), deployPath: 'WEB-INF/classes'
+        resource sourcePath: "${srcDirTestWeb}/resources".toString(), deployPath: '/WEB-INF/classes'
+        resource sourcePath: "${srcDirTestWeb}/webapp".toString(), deployPath: '/'
     }
 }
